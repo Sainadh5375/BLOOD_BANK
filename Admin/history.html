@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
+
+    <style>
+        /* Add your CSS styles here */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="history-container">
+        <h2>History</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Request ID</th>
+                    <th>Patient Name</th>
+                    <th>Age</th>
+                    <th>Blood Type</th>
+                    <th>Quantity</th>
+                    <th>Hospital Name</th>
+                    <th>Address</th>
+                    <th>Disease</th>
+                    <th>Deadline</th>
+                   <th>Optional Details</th>
+                    <th>Address District</th>
+                </tr>
+            </thead>
+            <tbody id="history-body">
+                <!-- History rows will be dynamically added here -->
+                {% for request in history_data %}
+                <tr>
+                    <td>{{ request.form_id }}</td>
+                    <td>{{ request.name }}</td>     
+                    <td>{{ request.age }}</td>
+                    <td>{{ request.blood_group }}</td>
+                    <td>{{ request.quantity }}</td>
+                    <td>{{ request.hospitalname }}</td>
+                    <td>{{ request.address }}</td>
+                    <td>{{ request.reason }}</td>
+                    <td>{{ request.deadline }}</td>
+                    <td>{{ request.optional_details }}</td>
+                    <td>{{ request.district }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // This JavaScript code can be removed since we're using Flask to dynamically render the data
+    </script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        li {
+            float: left;
+            border-right: 1px solid #bbb;
+        }
+
+        li:last-child {
+            border-right: none;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+            background-color: #111;
+        }
+
+        .active {
+            background-color: #04AA6D;
+        }
+
+        /* New CSS to center buttons */
+        ul {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding-left: 0;
+        }
+
+        li {
+            float: none;
+            display: inline-block;
+        }
+        .main_content {
+            width: 100%;
+            height: 100vh; /* Set height to full viewport height */
+            padding: 20px;
+        }
+        body {
+            overflow: hidden; /* Prevent scrollbars on the body */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+        
+        
+        
+        iframe {
+            width: 100%;
+            height: calc(100vh - 40px); /* Adjust height to fit content with padding */
+            border: none; /* Remove iframe border */
+        }
+        
+        .main_content .header {
+            padding: 20px;
+            background: #fff;
+            color: #717171;
+            border-bottom: 1px solid #e0e4e8;
+        }
+  
+        .main_content .info {
+            margin: 20px;
+            color: #717171;
+            line-height: 25px;
+        }
+  
+        .main_content .info div {
+            margin-bottom: 20px;
+        }
+
+        /* Style for iframe */
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
+    </style>
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+</head>
+<body>
+    <ul>
+        <li><a href="#" onclick="home()"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="#" onclick="registration()"><i class="fas fa-user-plus"></i> New Registration</a></li>
+        <li><a href="#" onclick="Addblood()"><i class="fas fa-tint"></i> Add Blood</a></li>
+        <li><a href="#" onclick="requests()"><i class="fas fa-tasks"></i> Requests</a></li>
+        <li><a href="#" onclick="history()"><i class="fas fa-history"></i> History</a></li>
+        <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li> <!-- Logout button -->
+    </ul>
+
+    <div class="main_content">
+        <iframe id="dashboardFrame1" src="" frameborder="0"></iframe>
+    </div>
+<script>
+    // Your existing functions
+    function home() {
+        if (document.getElementById("dashboardFrame1").src !== "/") {
+            document.getElementById("dashboardFrame1").src = "";
+        }
+    }
+    function registration() {
+        document.getElementById("dashboardFrame1").src = "appointment.html";
+    }
+    function Addblood(){
+        document.getElementById("dashboardFrame1").src = "add_blood.html";
+    }
+    function requests() {
+        document.getElementById("dashboardFrame1").src = "admin_req";
+    }
+    function history() {
+        document.getElementById("dashboardFrame1").src = "history.html";
+    }
+
+    // Logout function
+    function logout() {
+        // Redirect to the logout page or perform any necessary logout actions
+        // For demonstration purposes, let's redirect to a logout.html page
+        window.location.href = "log_out";
+    }
+</script>
+</body>
+</html>

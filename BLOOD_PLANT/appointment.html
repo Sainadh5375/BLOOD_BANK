@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Page</title>
+</head>
+<style>
+    
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f0f0f0;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    form {
+        display: flex;
+        flex-direction: column;
+        background-color: #fff; /* Form background color */
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    label {
+        margin-bottom: 8px;
+    }
+    
+    input,
+    select {
+        padding: 8px;
+        margin-bottom: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    
+    button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    body {
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-color: rgb(153, 244, 214);
+    }
+    
+    button:hover {
+        background-color: #0056b3;
+    }
+    
+    /* Responsive styles */
+    @media (max-width: 600px) {
+        .container {
+            width: 100%;
+            padding: 10px;
+        }
+    }
+    
+</style>
+<body>
+    
+    <div class="container">
+        <form method="post" action="/appointment.html" id="appointment">  
+            
+            {% if message %}
+            <p style="color: red;">{{ message }}</p>
+        {% endif %}
+        
+            <label for="appointment-date">Appointment Date</label>
+            <input type="date" id="appointment-date" name="appointment-date" min="" required>
+            <label for="appointment-time">Appointment Time</label>
+            <select id="appointment-time" name="appointment-time" required>
+            </select>
+            <label for="select-dist">Select Center:</label>
+            <select id="select-dist" name="select-dist" required>
+                <option value="">Select Center</option>
+
+
+                <script>
+const values = [
+    "Srikakulam", 
+    "Parvathipuram Manyam", 
+    "Vizianagaram", 
+    "Visakhapatnam", 
+    "Alluri Sitharama Raju", 
+    "Anakapalli", 
+    "Kakinada", 
+    "East Godavari", 
+    "Dr. B. R. Ambedkar Konaseema", 
+    "Eluru", 
+    "West Godavari", 
+    "Krishna", 
+    "Palnadu", 
+    "Guntur", 
+    "Bapatla", 
+    "Prakasam", 
+    "Sri Potti Sriramulu Nellore", 
+    "Kurnool", 
+    "Nandyal", 
+    "Anantapur", 
+    "Sri Sathya Sai", 
+    "YSR", 
+    "Annamayya", 
+    "Tirupati", 
+    "Chittoor"
+];
+                    const selectDist = document.getElementById('select-dist');
+                    values.forEach(value => {
+                        const option = document.createElement('option');
+                        option.value = value;
+                        option.textContent = value;
+                        selectDist.appendChild(option);
+                    });
+            
+                </script>
+            </select>            
+            <button type="submit" onclick="donate_file()" class="btn">Next</button>
+        </form>
+    </div>
+    <script>
+        
+                function donate_file() {
+            // Redirect to the checkout page
+              window.location.href = 'donate.html';
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectDist = document.getElementById('select-dist');
+            const appointmentDateInput = document.getElementById('appointment-date');
+            const appointmentTimeSelect = document.getElementById('appointment-time');
+            const appointmentForm = document.getElementById('appointment-form');
+            const openingTime = 8;
+            const closingTime = 19;
+            const lunchBreakStart = 13;
+            const lunchBreakEnd = 14;
+            function populateAppointmentTimes(selectedDate) {
+                appointmentTimeSelect.innerHTML = '';
+    
+                const currentDate = new Date();
+                const currentHour = currentDate.getHours();
+                let startHour = openingTime;
+                // If the selected date is today, start from the current hour
+                if (selectedDate.getDate() === currentDate.getDate() &&
+                    selectedDate.getMonth() === currentDate.getMonth() &&
+                    selectedDate.getFullYear() === currentDate.getFullYear()) {
+                    startHour = currentHour + 1;
+                }
+    
+                for (let hour = startHour; hour <= closingTime; hour++) {
+                    if (hour !== lunchBreakStart && hour !== lunchBreakEnd) {
+                        const option = document.createElement('option');
+                        const hourString = hour < 10 ? '0' + hour : hour;
+                        option.value = hourString + ':00';
+                        option.textContent = hourString + ':00';
+                        appointmentTimeSelect.appendChild(option);
+                    }
+                }
+            }
+    
+            function checkAvailableSlots(selectedTime, selectedDate) {
+                const currentTime = new Date();
+                const currentHour = currentTime.getHours();
+                const currentDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate());
+    
+                if (selectedDate < currentDate) return false; // Past dates
+    
+                if (selectedDate.getTime() === currentDate.getTime() && currentHour >= closingTime) return false; // Past closing time for today
+    
+                const selectedHour = parseInt(selectedTime.split(':')[0]);
+                if (selectedDate.getTime() === currentDate.getTime()) {
+                    return currentHour < selectedHour;
+                } else {
+                    return true; // All slots available for future dates
+                }
+            }
+    
+            const currentDate = new Date();
+    
+            appointmentDateInput.min = currentDate.toISOString().split('T')[0];
+    
+            populateAppointmentTimes(currentDate); // Populate initial slots
+    
+            appointmentDateInput.addEventListener('change', function() {
+                const selectedDate = new Date(appointmentDateInput.value);
+                if (selectedDate.getHours() >= closingTime) {
+                    alert("Appointments after 7:00 PM are not available.");
+                    appointmentDateInput.value = '';
+                } else {
+                    populateAppointmentTimes(selectedDate); // Populate slots based on selected date
+                }
+            });
+            function showMessage(message) {
+        // Select the message section div
+        var messageSection = document.getElementById('message-section');
+        // Update the innerHTML of the message section with the message
+        messageSection.innerHTML = '<p>' + message + '</p>';
+    }
+            appointmentTimeSelect.addEventListener('change', function() {
+                const selectedTime = appointmentTimeSelect.value;
+                const selectedDate = new Date(appointmentDateInput.value);
+                if (!checkAvailableSlots(selectedTime, selectedDate)) {
+                    alert("The selected time slot is full or past. Please choose another time.");
+                    appointmentTimeSelect.selectedIndex = 0;
+                }
+            });
+        });
+    </script>
+    
+</body>
+</html>

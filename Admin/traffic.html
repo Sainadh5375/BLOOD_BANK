@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Andhra Pradesh Map with Directions</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.12/leaflet-routing-machine.css" />
+  <style>
+    /* CSS styles for map and directions */
+    #map {
+      height: 400px;
+      width: calc(100% - 300px); /* Adjust map width */
+      float: left;
+    }
+    #directionsForm {
+      float: left;
+      margin-left: 10px;
+    }
+    #directionsContainer {
+      margin-top: 20px;
+    }
+    #directionsTable {
+      width: 100%; /* Set the table width to 100% */
+      border-collapse: collapse;
+    }
+    #directionsTable th, #directionsTable td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    #directionsTable th {
+      background-color: #f2f2f2;
+    }
+    #directionsTable th:first-child, #directionsTable td:first-child {
+      width: 10%; /* Adjust the width of the first column */
+    }
+    #directionsTable th:last-child, #directionsTable td:last-child {
+      width: 90%; /* Adjust the width of the second column */
+    }
+    /* Custom marker styles */
+    .source-marker-icon, .destination-marker-icon {
+      background-color: transparent;
+      border: none;
+      width: 32px;
+      height: 40px;
+      margin-top: -40px; /* Adjust vertical position */
+      margin-left: -16px; /* Center horizontally */
+    }
+    .pin {
+      background-color: red;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+    .pointer {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      bottom: -12px; /* Adjust vertical position */
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  </style>
+</head>
+<body>
+  <h1>Andhra Pradesh Map with Directions</h1>
+  <div id="map"></div>
+  <form id="directionsForm">
+    <!-- Form to input source and destination addresses -->
+    <h2>Get Coordinates</h2>
+    <label for="sourceAddress">Source Address:</label>
+    <input type="text" id="sourceAddress" name="sourceAddress" placeholder="Enter source address">
+    <label for="destinationAddress">Destination Address:</label>
+    <input type="text" id="destinationAddress" name="destinationAddress" placeholder="Enter destination address">
+    <button type="button" onclick="getCoordinates()">Get Coordinates</button>
+  </form>
+  <div id="directionsContainer">
+    <!-- Container to display shortest distance and directions -->
+    <h2>Shortest Distance</h2>
+    <p>Shortest Distance: <span id="shortestDistance"></span></p>
+    <h3>Directions</h3>
+    <table id="directionsTable">
+      <thead>
+        <tr>
+          <th>Step</th>
+          <th>Instruction</th>
+        </tr>
+      </thead>
+      <tbody id="directions"></tbody>
+    </table>
+  </div>
+  <!-- Include Leaflet and Leaflet Routing Machine scripts -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.12/leaflet-routing-machine.js"></script>
+  <script>
+    var map;
+    var routeControl;
+    var sourceMarker;
+    var destinationMarker;
+  
+    function initMap() {
+      map = L.map('map').setView([15.9129, 79.7400], 7);
+  
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+      }).addTo(map);
+    }
+  
+    function updateSourceMarker(coords) {
+      if (sourceMarker) {
+        sourceMarker.setLatLng(coords);
+      } else {
+        sourceMarker = L.marker(coords, {
+          icon: L.divIcon({
+            className: 'source-marker-icon',
+            html: '<div class="pin"></div><div class="pointer"></div>',
+            iconAnchor: [16, 40]
+          })
+        }).addTo(map);
+      }
+    }
+  
+    function updateDestinationMarker(coords) {
+      if (destinationMarker) {
+        destinationMarker.setLatLng(coords);
+      } else {
+        destinationMarker = L.marker(coords, {
+          icon: L.divIcon({
+            className: 'destination-marker-icon',
+            html: '<div class="pin"></div><div class="pointer"></div>',
+            iconAnchor: [16, 40]
+          })
+        }).addTo(map);
+      }
+    }
+  
+    function getCoordinates() {
+      var sourceAddress = document.getElementById('sourceAddress').value;
+      var destinationAddress = document.getElementById('destinationAddress').value;
+      fetch('/get_coordinates', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ address: sourceAddress, delivery_address: destinationAddress })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.source_coordinates && data.destination_coordinates) {
+          var sourceCoordinates = data.source_coordinates;
+          var destinationCoordinates = data.destination_coordinates;
+          map.setView([sourceCoordinates.latitude, sourceCoordinates.longitude], 12);
+          updateSourceMarker([sourceCoordinates.latitude, sourceCoordinates.longitude]);
+          updateDestinationMarker([destinationCoordinates.latitude, destinationCoordinates.longitude]);
+          calculateRoute([sourceCoordinates.latitude, sourceCoordinates.longitude], [destinationCoordinates.latitude, destinationCoordinates.longitude]);
+        } else {
+          alert('Coordinates not found');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+  
+    function calculateRoute(sourceCoords, destinationCoords) {
+      if (routeControl) {
+        map.removeControl(routeControl);
+      }
+  
+      routeControl = L.Routing.control({
+        waypoints: [
+          L.latLng(sourceCoords[0], sourceCoords[1]),
+          L.latLng(destinationCoords[0], destinationCoords[1])
+        ],
+        routeWhileDragging: true,
+        show: true,
+        createMarker: function() { return null; }
+      }).addTo(map);
+  
+      routeControl.on('routesfound', function(e) {
+        var shortestDistance = Infinity;
+        var shortestInstructions = [];
+        var routes = e.routes;
+        routes.forEach(function(route) {
+          var totalDistance = route.summary.totalDistance;
+          if (totalDistance < shortestDistance) {
+            shortestDistance = totalDistance;
+            shortestInstructions = route.instructions;
+          }
+        });
+        document.getElementById('shortestDistance').textContent = shortestDistance.toFixed(2) + ' meters';
+  
+        var directionsTableBody = document.getElementById('directions');
+        directionsTableBody.innerHTML = '';
+        shortestInstructions.forEach(function(instruction, index) {
+          var row = '<tr><td>' + (index + 1) + '</td><td>' + instruction.text + '</td></tr>';
+          directionsTableBody.insertAdjacentHTML('beforeend', row);
+        });
+      });
+    }
+  
+    document.addEventListener('DOMContentLoaded', initMap);
+  </script>
+  
+</body>
+</html>

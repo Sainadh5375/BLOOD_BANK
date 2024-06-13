@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+  <style>
+ 
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #95f1a7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 20px;
+            width: 80%;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            margin: 0 auto;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="file"] {
+            margin-top: 5px;
+        }
+
+        input[type="submit"],
+        input[type="reset"],
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover,
+        input[type="reset"]:hover,
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+form {
+    background-color: #ffffff;
+    padding: 20px;
+    width: 80%;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+  </style>
+    <script>
+        function validateForm() {
+            if (!validateName() || !validateEmail() || !validatePhoneNumber() || getLocation()) {
+                return false;
+            }
+            alert("Successfully submitted!");
+            return true;
+        }
+        function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            document.getElementById("latitude").value = latitude;
+            document.getElementById("longitude").value = longitude;
+            document.getElementById("latitudeDisplay").innerText = latitude;
+            document.getElementById("longitudeDisplay").innerText = longitude;
+            // Uncomment the line below if you need to submit the form programmatically after getting the location
+            // document.forms["yourFormId"].submit();
+        }, function(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("User denied the request for geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+        });
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+
+        function validateName() {
+            var fname = document.getElementById('fname').value.trim();
+            var lname = document.getElementById('lname').value.trim();
+            if (fname === "" || lname === "") {
+                alert("Please enter your full name.");
+                return false;
+            }
+            return true;
+        }
+
+        function validateEmail() {
+            var email = document.getElementById('Email').value.trim();
+            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                alert('Please enter a valid email address');
+                return false;
+            }
+            return true;
+        }
+
+        function validatePhoneNumber() {
+            var phone = document.getElementById('phone_no').value.trim();
+            var phonePattern = /^\d{10}$/;
+            if (!phonePattern.test(phone)) {
+                alert('Please enter a valid phone number');
+                return false;
+            }
+            return true;
+        }
+       function home(){
+        alert("order placed sucessfully");
+       }
+    </script>
+</head>
+<body>
+    <form  action="thankyou.html" onsubmit="return validateForm()" method="post">
+        <label for="fname">First Name:</label>
+        <input type="text" id="fname" placeholder="Enter Your First Name" name="fname" required>
+        <br><br>
+        <label for="Email">Email:</label>   
+        <input type="email" id="Email" placeholder=" Enter Your Email" name="Email" required>
+        <br><br>
+        <label for="phone_no">Phone Number:</label>
+        <input type="text" id="phone_no" name="phone_no" placeholder="Enter Your Phone Number" pattern="\d{10}" maxlength="10" required oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+        <br><br>
+        <label for="Address">Address:</label>
+        <button type="button" id="get-location" onclick="getLocation()">Get My Location</button>
+        <input type="hidden" id="latitude" name="latitude">
+        <input type="hidden" id="longitude" name="longitude">        
+        <br><br>
+        <input type="submit" onclick="home()" value="Submit">
+        <input type="reset" value="Reset">
+    </form>
+</body>
+</html>

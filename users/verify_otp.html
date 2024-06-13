@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        #resend-container {
+            justify-content:left;
+            margin-top: 10px; /* Adjust as needed */
+        }
+        
+        #resend {
+            width: auto; /* Adjust the width as needed */
+        }
+        
+        .otp-box {
+            width: 300px; /* Adjust the width as needed */
+            padding: 12px;
+            border-radius: 6px;
+            border: 2px solid #ccc;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px; /* Added margin between input box and button */
+        }
+        .otp-box input[type="text"] {
+            width: 100%;
+            border: none;
+            background-color: transparent;
+            text-align: center;
+            font-size: inherit;
+            outline: none; /* Remove default outline */
+        }
+        form {
+            max-width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        input[type="submit"] {
+            width: 100%;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        
+        input[type="submit"]:hover, #resend:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <form action="{{ url_for('verify_otp_page') }}" method="post">
+            <div class="otp-box">
+                <input type="text" name="otp"  maxlength="4" onkeypress="return isNumberKey(event)" required>
+            </div>
+        
+        <input type="hidden" name="stored_otp" value="{{ otp }}">
+        <input type="submit" value="Verify OTP">
+    </form>
+
+    <form action="/resend_otp" method="get">
+            <button id="resend" type="submit">Resend OTP</button>
+    </form>
+</div>
+    <script>
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Donation History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <a class="back-button" href="/dashboard">&#8592;</a>
+    <div class="container">
+        <h1>Blood Donation History</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Address</th>
+                    <th>Gender</th>
+                    <th>Blood Group</th>
+                    <th>Reason</th>
+                    <th>Quantity</th>
+                    <th>Optional Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for donation in donation_history %}
+                <tr>
+                    <td>{{ donation[0] }}</td> <!-- Name -->
+                    <td>{{ donation[1] }}</td> <!-- Age -->
+                    <td>{{ donation[2] }}</td> <!-- Address -->
+                    <td>{{ donation[3] }}</td> <!-- Gender -->
+                    <td>{{ donation[4] }}</td> <!-- Blood Group -->
+                    <td>{{ donation[5] }}</td> <!-- Reason -->
+                    <td>{{ donation[6] }}</td> <!-- Quantity -->
+                    <td>{{ donation[7] }}</td> <!-- Status -->
+                </tr>
+                {% endfor %}
+            </tbody>
+            
+        </table>
+    </div>
+</body>
+</html>

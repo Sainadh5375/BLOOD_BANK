@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Form</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #95f1a7;
+            margin: 0;
+            padding: 0;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            width: 80%;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="file"] {
+            margin-top: 5px;
+        }
+
+        input[type="submit"],
+        input[type="reset"] {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover,
+        input[type="reset"]:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+        }
+
+        /* Styles for Radio Buttons */
+        .gender,
+        .blood-group,
+        .donate-blood {
+            margin-right: 10px;
+        }
+
+        /* Styles for Radio Button Labels */
+        label[for="Male"],
+        label[for="Female"],
+        label[for="Prefer_not_to_say"] {
+            margin-right: 7px;
+        }
+
+        label[for="A+"] {
+            margin-right: 30px;
+        }
+
+        label[for="A-"],
+        label[for="B+"] {
+            margin-right: 30px;
+        }
+
+        label[for="B-"],
+        label[for="O+"] {
+            margin-right: 29px;
+        }
+
+        label[for="O-"],
+        label[for="AB+"] {
+            margin-right: 18px;
+        }
+
+        label[for="AB-"],
+        label[for="YES"],
+        label[for="NO"],
+        label[for="YES1"],
+        label[for="NO"] {
+            margin-right: 7px;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <form action="/donate.html" method="post">
+        <label for="fname">First Name:</label>
+        <input type="text" id="fname" name="fname" required>
+        <br><br>
+        <label for="lname">Last Name:</label>
+        <input type="text" id="lname" name="lname" required>
+        <br><br>
+        <label for="Dob">Date of Birth:</label>
+        <input type="date" id="Dob" name="Dob" required>
+        <br><br>
+        <label for="Aadhar_no">Aadhar Number:</label>
+        <input type="text" id="Aadhar_no" name="Aadhar_no" pattern="\d{12}" maxlength="12" required>
+        <br><br>
+        <label for="Email">Email:</label>
+        <input type="email" id="Email" name="Email" required>
+        <br><br>
+        <label for="phone_no">Phone Number:</label>
+        <input type="text" id="phone_no" name="phone_no" pattern="\d{10}" maxlength="10" required>
+        <br><br>
+        <label for="Age">Age:</label>
+        <input type="number" id="Age" name="Age" min="18" max="65" required>
+        <br><br>
+        <label for="District">District:</label>
+        <input type="text" id="District" name="District" required>
+        <br><br>
+        <label for="Address">Address:</label>
+        <textarea id="Address" name="Address" rows="4" cols="30" required></textarea>
+        <br><br>
+        <label for="PostalCode">Postal Code:</label>
+        <input type="text" id="PostalCode" name="PostalCode" pattern="\d{6}" maxlength="6" required>
+        <br><br>
+        <label for="Occupation">Occupation:</label>
+        <input type="text" id="Occupation" name="Occupation" required>
+        <br><br>
+        <p>Please Select Your Gender:</p>
+        <input type="radio" id="Male" name="Gender" value="MALE" required>
+        <label for="Male">Male</label>
+        <input type="radio" id="Female" name="Gender" value="FEMALE" required>
+        <label for="Female">Female</label>
+        <input type="radio" id="Prefer_not_to_say" name="Gender" value="Prefer not to say" required>
+        <label for="Prefer_not_to_say">Prefer Not to Say</label>
+        <br><br>
+        <p>Select Your Blood Group:</p>
+        <input type="radio" id="A+" name="Blood_Group" value="A+" required>
+        <label for="A+">A+</label>
+        <input type="radio" id="A-" name="Blood_Group" value="A-" required>
+        <label for="A-">A-</label>
+        <br>
+        <input type="radio" id="B+" name="Blood_Group" value="B+" required>
+        <label for="B+">B+</label>
+        <input type="radio" id="B-" name="Blood_Group" value="B-" required>
+        <label for="B-">B-</label>
+        <br>
+        <input type="radio" id="O+" name="Blood_Group" value="O+" required>
+        <label for="O+">O+</label>
+        <input type="radio" id="O-" name="Blood_Group" value="O-" required>
+        <label for="O-">O-</label>
+        <br>
+        <input type="radio" id="AB+" name="Blood_Group" value="AB+" required>
+        <label for="AB+">AB+</label>
+        <input type="radio" id="AB-" name="Blood_Group" value="AB-" required>
+        <label for="AB-">AB-</label>
+        <br><br>
+        <p>Have You Donated Blood Before?</p>
+        <input type="radio" id="YES" name="before11" value="YES" required>
+        <label for="YES">Yes</label>
+        <input type="radio" id="NO" name="before11" value="NO" required>
+        <label for="NO">No</label>
+        <br><br>
+        <label for="Disease">Have You Suffered from Any Diseases Before?</label>
+        <br><br>
+        <input type="radio" id="YES1" name="before12" value="YES1" required onclick="displayDescription()"> 
+        <label for="YES1">Yes</label> 
+        <input type="radio" id="NO1" name="before12" value="NO1" required onclick="hideDescription()"> 
+        <label for="NO1">No</label>
+        <br><br>
+        <div id="descriptionLabel" style="display: none;">
+            <label for="DiseaseDescription">Please Describe the Diseases You Suffered From:</label>    
+            <textarea id="DiseaseDescription" name="Disease" rows="4" cols="30"></textarea>
+        </div>
+        <br><br>
+        <input type="submit"  value="Submit">
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="reset" value="Reset">
+    </form>
+
+    <script>
+        function displayDescription() {
+            document.getElementById("descriptionLabel").style.display = "block";
+        }
+       
+        function hideDescription() {
+            document.getElementById("descriptionLabel").style.display = "none";
+        }
+    </script>
+</body>
+</html>

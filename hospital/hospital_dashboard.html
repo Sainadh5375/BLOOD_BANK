@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADMIN</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.css">
+
+    <style>
+        /* Your CSS styles here */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            list-style: none;
+            text-decoration: none;
+            font-family: 'Josefin Sans', sans-serif;
+        }
+
+        body {
+            background-color: #f3f5f9;
+        }
+
+        .wrapper {
+            display: flex;
+            min-height: 100vh; /* Ensure the wrapper fills the entire viewport height */
+        }
+
+        .sidebar {
+            width: 200px;
+            background: rgb(2,0,36);
+            background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+            padding: 30px 0px;
+            position: fixed;
+            height: 100%; /* Make sidebar full height */
+        }
+
+        .sidebar h2 {
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff; /* Set text color to white */
+            transition: color 0.3s; /* Add transition effect for smooth color change */
+            cursor: pointer; /* Add cursor pointer */
+        }
+
+        .sidebar ul li {
+            padding: 15px;
+            border-bottom: 1px solid #bdb8d7;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            transition: background-color 0.3s; /* Add transition for smooth hover effect */
+        }
+
+        .sidebar ul li a {
+            display: block;
+            color: #fff; /* Set initial text color to white */
+            transition: color 0.3s; /* Add transition effect for smooth color change */
+        }
+
+        .main_content {
+            width: calc(100% - 200px); /* Adjusted width to account for sidebar */
+            margin-left: 200px;
+            padding: 20px;
+        }
+
+        .main_content .header {
+            padding: 20px;
+            background: #fff;
+            color: #717171;
+            border-bottom: 1px solid #e0e4e8;
+        }
+
+        @media (max-height: 500px) {
+            .social_media {
+                display: none !important;
+            }
+        }
+
+        .fa-sign-out-alt {
+            color: white;
+            font-size: 2ex;
+        }
+
+        /* Logout styling */
+        .logout {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 13%;
+            background: #000000;
+            padding: 15px 0;
+            text-align: center;
+        }
+
+        .logout a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="sidebar">
+            <h2>Hospital Dashboard</h2>
+
+            <ul>
+                <li><a style="text-decoration:none;" href="#" onclick="redirectToBloodRequest()"><i class="fas fa-sync-alt"></i>Blood Request</a></li>
+                <li><a style="text-decoration:none;" href="#" onclick="redirectToRequestHistory()"><i class="fas fa-history"></i>Request History</a></li>
+            </ul>
+        </div>
+        <div class="main_content">
+            <div class="header">
+                <h2>Welcome to the Hospital Dashboard</h2>
+            </div>
+        </div>
+    </div>
+    <div class="logout">
+        <a href="logout.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script>
+        function redirectToBloodRequest() {
+            window.location.href = "submit_request"; // Replace "blood_request.html" with the URL of the blood request webpage
+        }
+
+        function redirectToRequestHistory() {
+            window.location.href = "history"; // Replace "request_history.html" with the URL of the request history webpage
+        }
+    </script>
+</body>
+</html>

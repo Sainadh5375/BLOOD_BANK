@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="submit"], button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover, button:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: red;
+        }
+
+        .otp-container {
+            display: flex;
+        }
+        .otp-input {
+            width: 40px;
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Email Verification</h2>
+        <form id="email-form" action="/verify_otp" method="POST">
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" required pattern="[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+(?:com|edu\.in)" title="Enter a valid email address (example@email.com or example@edu.in)">
+            <input type="submit" value="Send OTP">
+            <span class="error-message" id="invalid-format" style="display: none;">Invalid email format</span>
+        </form>            
+    </div>
+
+    <script>
+        document.getElementById("email-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Continue with form submission logic
+            const formData = new FormData(this);
+
+            // Make an AJAX request to the server to handle form submission
+            fetch('/verify_otp', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    // If the response is successful, redirect to verify_otp page
+                    window.location.href = '/verify_otp_page';
+                } else {
+                    console.error('Failed to submit form');
+                }
+            })
+            .catch(error => console.error('Error submitting form:', error));
+        });
+
+        const emailInput = document.getElementById("email");
+        const invalidFormatMsg = document.getElementById("invalid-format");
+
+        emailInput.addEventListener("input", function() {
+            if (!this.checkValidity()) {
+                invalidFormatMsg.style.display = "block";
+            } else {
+                invalidFormatMsg.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>

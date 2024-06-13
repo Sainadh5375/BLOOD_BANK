@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #95f1a7;
+            margin: 0;
+            padding: 0;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            width: 80%;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="file"] {
+            margin-top: 5px;
+        }
+
+        input[type="submit"],
+        input[type="reset"] {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover,
+        input[type="reset"]:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+        }
+
+        /* Styles for Radio Buttons */
+        .gender,
+        .blood-group,
+        .donate-blood {
+            margin-right: 10px;
+        }
+
+        /* Styles for Radio Button Labels */
+        label[for="Male"],
+        label[for="Female"],
+        label[for="Prefer_not_to_say"] {
+            margin-right: 7px;
+        }
+
+        label[for="AB-"],
+        label[for="YES"],
+        label[for="NO"],
+        label[for="YES1"],
+        label[for="NO"] {
+            margin-right: 7px;
+        }
+    </style>
+    <script>
+        function validateForm() {
+            return (
+                validateAge() &&
+                validateEmailPattern() &&
+                validatePhonePattern() &&
+                validateAadhar() &&
+                validatePostalCode() &&
+                validateDOB()
+            );
+        }
+
+        function validateAge() {
+            var age = document.getElementById('Age').value;
+            if (age < 18 || age > 65) {
+                alert("You are not eligible. Age should be between 18 and 65.");
+                return false;
+            }
+            return true;
+        }
+
+        function validateEmailPattern() {
+            var email = document.getElementById('Email').value;
+            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                alert('Please enter a valid email address');
+                return false;
+            }
+            return true;
+        }
+
+        function validatePhonePattern() {
+            var phone = document.getElementById('phone_no').value;
+            var phonePattern = /^\d{10}$/;
+            if (!phonePattern.test(phone)) {
+                alert('Please enter a valid phone number');
+                return false;
+            }
+            return true;
+        }
+
+        function validateAadhar() {
+            var aadhar = document.getElementById('Aadhar_no').value;
+            var aadharPattern = /^\d{12}$/;
+            if (!aadharPattern.test(aadhar)) {
+                alert('Please enter a valid Aadhar number');
+                return false;
+            }
+            return true;
+        }
+        function validatePostalCode() {
+            var postalCode = document.getElementById('PostalCode').value;
+            var postalCodePattern = /^\d{6}$/;
+            if (!postalCodePattern.test(postalCode)) {
+                alert('Please enter a valid postal code');
+                return false;
+            }
+            return true;
+        }
+        
+        function validateDOB() {
+            var dob = document.getElementById('Dob').value;
+            var today = new Date();
+            if (new Date(dob) >= today) {
+                alert("Invalid Date of Birth");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+    
+    <form  onsubmit="return validateForm()" method="POST">
+        <label for="fname">FIRST NAME:</label>
+        <input type="text" id="fname" name="fname" required>
+        <label for="lname">LAST NAME:</label>
+        <input type="text" id="lname" name="lname" required>
+        <br><br>
+        <label for="Dob">DATE OF BIRTH:</label>
+        <input type="date" id="Dob" name="Dob" required>
+        <br><br>
+        <label for="Email">EMAIL:</label>
+        <input type="email" id="Email" name="Email" required>
+        <label for="phone_no">PHONE NUMBER:</label>
+        <input type="text" id="phone_no" name="phone_no" pattern="\d{10}" maxlength="10" required oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+        <br><br>
+        <label for="Age">AGE:</label>
+        <input type="number" id="Age" name="Age" pattern="\d{3}" maxlength="3" required oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+        <label for="District">DISTRICT:</label>
+        <input type="text" id="District" name="District" required>
+        <br><br>
+        <label for="Address">ADDRESS:</label>
+        <textarea id="Address" name="Address" rows="4" cols="90" required></textarea>
+        <br><br>
+
+        <p>Please Select your Gender</p>
+        <input type="radio" id="Male" name="Gender" value="MALE" class="gender" required>
+        <label for="Male"> MALE</label>
+        <input type="radio" id="Female" name="Gender" value="FEMALE" class="gender" required>
+        <label for="Female"> FEMALE</label>
+        <input type="radio" id="Prefer_not_to_say" name="Gender" value="Prefer not to say" class="gender" required>
+        <label for="Prefer_not_to_say"> Prefer Not to say</label>
+        <br><br>
+
+        <input type="submit" value="Submit">
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="reset" value="Reset">
+    </form>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #95f1a7;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="datetime-local"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"],
+        input[type="reset"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        input[type="submit"]:hover,
+        input[type="reset"]:hover {
+            background-color: #45a049;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333333;
+        }
+
+        input[type="radio"] {
+            margin-right: 5px;
+        }
+    </style>
+    <script>
+        // Your JavaScript functions here
+        function redirectToBloodRequest() {
+            window.location.href = "blood_request_form.html"; // Replace "blood_request_form.html" with the URL of the blood request form webpage
+        }
+
+        function redirectToRequestHistory() {
+            window.location.href = "request_history.html"; // Replace "request_history.html" with the URL of the request history webpage
+        }
+
+        function validateForm() {
+            var age = document.getElementById('Age').value;
+            if (age < 0) {
+                alert("Age should be a positive number!");
+                return false;
+            }
+            return true;
+        }
+
+        // Function to set min attribute for datetime-local input
+        function setMinDateTime() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = (now.getMonth() + 1).toString().padStart(2, '0');
+            var day = now.getDate().toString().padStart(2, '0');
+            var hours = now.getHours().toString().padStart(2, '0');
+            var minutes = now.getMinutes().toString().padStart(2, '0');
+            var minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+            document.getElementById("Deadline").min = minDateTime;
+        }
+
+        window.onload = function() {
+            setMinDateTime(); // Call the function when the window loads
+        }
+    </script>
+</head>
+<body>
+    <a class="back-button" href="/dashboard">&#8592;</a>
+    <form action="/submit_request" method="post" onsubmit="return validateForm()">
+        <label for="fname">Name:</label>
+        <input type="text" id="fname" name="fname" required>
+        <br><br>
+        <label for="Age">Age:</label>
+        <input type="number" id="Age" name="Age" required min="0">
+        <br><br>
+        <label for="District">District:</label>
+        <select id="District" name="District" required>
+            <option value="">Select District</option>
+            <option value="Alluri Sitharama Raju">Alluri Sitharama Raju</option>
+            <option value="Anakapalli">Anakapalli</option>
+            <option value="Anantapur">Anantapur</option>
+            <option value="Annamayya">Annamayya</option>
+            <option value="Bapatla">Bapatla</option>
+            <option value="Chittoor">Chittoor</option>
+            <option value="Dr. B. R. Ambedkar Konaseema">Dr. B. R. Ambedkar Konaseema</option>
+            <option value="East Godavari">East Godavari</option>
+            <option value="Eluru">Eluru</option>
+            <option value="Guntur">Guntur</option>
+            <option value="Kakinada">Kakinada</option>
+            <option value="Krishna">Krishna</option>
+            <option value="Kurnool">Kurnool</option>
+            <option value="Nandyal">Nandyal</option>
+            <option value="NTR">NTR</option>
+            <option value="Palnadu">Palnadu</option>
+            <option value="Parvathipuram Manyam">Parvathipuram Manyam</option>
+            <option value="Prakasam">Prakasam</option>
+            <option value="Sri Potti Sriramulu Nellore">Sri Potti Sriramulu Nellore</option>
+            <option value="Sri Sathya Sai">Sri Sathya Sai</option>
+            <option value="Srikakulam">Srikakulam</option>
+            <option value="Tirupati">Tirupati</option>
+            <option value="Visakhapatnam">Visakhapatnam</option>
+            <option value="Vizianagaram">Vizianagaram</option>
+            <option value="West Godavari">West Godavari</option>
+            <option value="YSR">YSR</option>            
+        </select>
+        <br><br>
+        <label for="Address">Address:</label>
+        <input type="text" id="Address" name="Address" required>
+        <br><br>
+        <label for="hospitalname">Enter Hospital Name:</label>
+        <input type="text" id="hospitalname" name="hospitalname" required>
+        <br><br>
+        <p>Please select your gender:</p>
+        <input type="radio" id="Male" name="Gender" value="MALE" required>
+        <label for="Male"> Male</label>
+        <input type="radio" id="Female" name="Gender" value="FEMALE" required>
+        <label for="Female"> Female</label>
+        <input type="radio" id="Prefer_not_to_say" name="Gender" value="Prefer not to say" required>
+        <label for="Prefer_not_to_say"> Prefer Not to say</label>
+        <br><br>
+        <p>Select Blood Group:</p>
+        <input type="radio" id="A+" name="Blood_Group" value="A+" required>
+        <label for="A+" > A+ </label>
+        <span style="margin-left:2em"></span>
+        <input type="radio" id="A-" name="Blood_Group" value="A-" required>
+        <label for="A-" > A- </label>
+        <br>
+        <input type="radio" id="B+" name="Blood_Group" value="B+" required>
+        <label for="B+" > B+ </label>
+        <span style="margin-left:2em"></span>
+
+        <input type="radio" id="B-" name="Blood_Group" value="B-" required>
+        <label for="B-" > B- </label>
+        <br>
+        <input type="radio" id="O+" name="Blood_Group" value="O+" required>
+        <label for="O+" > O+ </label>
+        <span style="margin-left:2em"></span>
+
+        <input type="radio" id="O-" name="Blood_Group" value="O-" required>
+        <label for="O-" > O- </label>
+        <br>
+        <input type="radio" id="AB+" name="Blood_Group" value="AB+" required>
+        <label for="AB+" > AB+ </label>
+        <span style="margin-left:1.32em"></span>
+        <input type="radio" id="AB-" name="Blood_Group" value="AB-" required>
+        <label for="AB-" > AB- </label>        <br><br>
+        <label for="Reason">Reason:</label><br><br>
+        <textarea id="Reason" name="Reason" rows="4" cols="90" required></textarea>
+        <br><br>
+        <label for="Quantity">Enter Quantity(1 unit=450ml) in Units:</label>
+        <input type="number" id="Quantity" name="Quantity" required min="0">
+        <br><br>
+        <label for="Optional">Optional Details of Patient:</label><br><br>
+        <textarea id="Optional" name="Optional" rows="4" cols="90"></textarea>
+        <br><br>
+        <label for="Deadline">Deadline:</label><br><br>
+        <input type="datetime-local" id="Deadline" name="Deadline">
+        <br><br>
+        <input type="submit" value="Submit">
+        <input type="reset" value="Reset">
+        {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+    </form>
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Andhra Pradesh Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 400px;
+      width: calc(100% - 300px); /* Adjust map width */
+      float: left;
+    }
+    #bloodBankTableContainer {
+      font-family: Arial, sans-serif;
+      display: none;
+      position: absolute;
+      top: 10px;
+      right: 10px; /* Adjust right offset */
+      background-color: white;
+      padding: 10px;
+      border: 1px solid #ccc;
+      z-index: 1000;
+    }
+    #bloodBankTable {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    #bloodBankTable td, #bloodBankTable th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    #bloodBankTable th {
+      background-color: #007bff;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Andhra Pradesh Map</h1>
+  <div id="map"></div>
+  <div id="bloodBankTableContainer">
+    <table id="bloodBankTable">
+      <thead>
+        <tr>
+          <th>District</th>
+          <th>A+</th>
+          <th>B+</th>
+          <th>AB+</th>
+          <th>O+</th>
+          <th>A-</th>
+          <th>B-</th>
+          <th>AB-</th>
+          <th>O-</th>
+        </tr>
+      </thead>
+      <tbody id="bloodBankTableBody"></tbody>
+    </table>
+  </div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    // Function to initialize the map
+    function initMap() {
+      // Creating a map centered at Andhra Pradesh
+      var map = L.map('map').setView([15.9129, 79.7400], 7);
+
+      // Adding OpenStreetMap tiles
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+      }).addTo(map);
+
+      // Array to hold the coordinates for each set along with districts
+      var sets = [
+        { name: "Set 1", lat: 13.6288, lng: 79.4192, districts: ["Sri Sathya Sai", "Annamayya", "Chittoor", "Tirupati"] },
+        { name: "Set 2", lat: 14.6546, lng: 77.4644, districts: ["Anantapur", "YSR", "Nandyal", "Kurnool"] },
+        { name: "Set 3", lat: 15.9129, lng: 79.7400, districts: ["Prakasam", "Sri Potti Sriramulu Nellore"] },
+        { name: "Set 4", lat: 16.3067, lng: 80.4365, districts: ["Palnadu", "Bapatla", "Krishna", "Guntur"] },
+        { name: "Set 5", lat: 16.7129, lng: 81.0964, districts: ["NTR", "Eluru", "Alluri Sitharama Raju", "Parvathipuram Manyam"] },
+        { name: "Set 6", lat: 16.432, lng: 81.6966, districts: ["West Godavari", "Dr. B. R. Ambedkar Konaseema", "East Godavari", "Kakinada"] },
+        { name: "Set 7", lat: 17.6868, lng: 83.2185, districts: ["Anakapalli", "Visakhapatnam", "Vizianagaram", "Srikakulam"] },
+      ];
+  
+      // Adding markers for each set
+      sets.forEach((set) => {
+        var marker = L.marker([set.lat, set.lng]).addTo(map);
+        marker.on('click', function() {
+          showBloodBank(set.name, set.districts);
+        });
+      });
+    }
+
+    // Function to show blood bank table for the selected set
+    function showBloodBank(setName, districts) {
+      var bloodBankTableBody = document.getElementById('bloodBankTableBody');
+      bloodBankTableBody.innerHTML = ""; // Clear previous data
+      
+      // AJAX request to fetch blood bank data from Flask endpoint
+      axios.post('/get_blood_bank_data', {setName: setName, districts: districts})
+        .then(function (response) {
+          // Handle success
+          var bloodBankData = response.data;
+          Object.keys(bloodBankData).forEach((district) => {
+            var row = "<tr>";
+            row += "<td>" + district + "</td>"; // District column
+            var units = bloodBankData[district];
+            row += "<td>" + (units["A+"] || 0) + "</td>"; // A+ column
+            row += "<td>" + (units["B+"] || 0) + "</td>"; // B+ column
+            row += "<td>" + (units["AB+"] || 0) + "</td>"; // AB+ column
+            row += "<td>" + (units["O+"] || 0) + "</td>"; // O+ column
+            row += "<td>" + (units["A-"] || 0) + "</td>"; // A- column
+            row += "<td>" + (units["B-"] || 0) + "</td>"; // B- column
+            row += "<td>" + (units["AB-"] || 0) + "</td>"; // AB- column
+            row += "<td>" + (units["O-"] || 0) + "</td>"; // O- column
+            row += "</tr>";
+            bloodBankTableBody.innerHTML += row;
+          });
+          document.getElementById('bloodBankTableContainer').style.display = 'block';
+        })
+        .catch(function (error) {
+          // Handle error
+          console.error('Error fetching blood bank data:', error);
+        });
+    }
+
+    // Call the initMap function after the page has loaded
+    document.addEventListener('DOMContentLoaded', initMap);
+  </script>
+</body>
+</html>

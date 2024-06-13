@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REQUESTS</title>
+
+    <style>
+        /* Add colors and styles for hover effects */
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            transition-duration: 0.4s;
+            margin-right: 5px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Add colors for timer */
+        .timer {
+            font-size: 16px;
+            padding: 8px;
+            border-radius: 4px;
+            display: inline-block;
+            min-width: 160px; /* Adjusted width for days */
+            text-align: center;
+            color: #333;
+            background-color: #eee;
+        }
+
+        .timer.expired {
+            color: #fff;
+            background-color: #dc3545; /* Expired background color */
+        }
+
+        .timer.active {
+            color: #fff;
+            background-color: #28a745; /* Active background color */
+        }
+
+        /* Add alternating row colors for better readability */
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Style the select dropdown */
+        select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        /* Style the option items */
+        select option {
+            padding: 8px;
+            background-color: #fff;
+            color: #333;
+        }
+
+        /* Style the headers */
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        /* Add a border highlight effect on focus */
+        input:focus,
+        select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        /* Add a subtle box-shadow to the table */
+        .request-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            height: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
+    <script>
+        function reloadPage() {
+            window.location.reload();
+        }
+
+        setInterval(reloadPage, 10000); // 10000 milliseconds = 10 seconds
+    </script>
+</head>
+<body>
+<div class="request-container">
+    <table>
+        <thead>
+        <tr>
+            <th>Request ID</th>
+            <th>Patient Name</th>
+            <th>Age</th>
+            <th>Blood Type</th>
+            <th>Quantity</th>
+            <th>Hospital Name</th>
+            <th>Address</th>
+            <th>Gender</th>
+            <th>Disease</th>
+            <th>Deadline</th>
+            <th>Time Remaining</th>
+            <th>Optional Details</th>
+            <th>Address District</th> <!-- Added Address District header -->
+            <th>District</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+
+        <tbody id="requests-body">
+        <!-- Request rows will be dynamically generated here -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function startTimer(row) {
+        const deadlineString = row.querySelector('td:nth-child(10)').textContent;
+        const deadlineTime = new Date(deadlineString);
+        const timerElement = row.querySelector('.timer');
+
+        function updateTimer() {
+            const currentTime = new Date();
+            const timeDiff = deadlineTime - currentTime;
+
+            if (timeDiff > 0) {
+                const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+                if (days > 0) {
+                    timerElement.textContent = `${days}d ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                } else {
+                    timerElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+
+                // Change color based on proximity to the deadline
+                if (days < 1 && hours < 12) {
+                    timerElement.classList.remove('active', 'expired');
+                    timerElement.classList.add('soon');
+                } else if (timeDiff < 0) {
+                    timerElement.textContent = 'Expired';
+                    timerElement.classList.remove('soon', 'active');
+                    timerElement.classList.add('expired');
+                    clearInterval(timerInterval);
+                    // Remove the row from the table
+                    row.remove();
+                } else {
+                    timerElement.classList.remove('soon', 'expired');
+                    timerElement.classList.add('active');
+                }
+            } else {
+                timerElement.textContent = 'Expired';
+                timerElement.classList.remove('soon', 'active');
+                timerElement.classList.add('expired');
+                clearInterval(timerInterval);
+                // Remove the row from the table
+                row.remove();
+            }
+        }
+
+        updateTimer();
+        const timerInterval = setInterval(updateTimer, 1000); // Update timer every second
+    }
+
+    // Function to update time remaining for all rows
+    function updateTimeRemaining() {
+        const rows = document.querySelectorAll('#requests-body tr');
+        rows.forEach(row => startTimer(row));
+    }
+
+    // Call updateTimeRemaining() to start the timers for existing rows
+    updateTimeRemaining();
+</script>
+
+<script>
+    // Function to fetch districts from the server and populate the dropdown
+    function fetchDistricts(id) {
+        fetch('/districts')
+            .then(response => response.json())
+            .then(data => {
+                // Get the select element
+                const selectElement = document.getElementById(`select-dist-${id}`);
+
+                // Clear existing options
+                selectElement.innerHTML = '';
+
+                // Create and append new options
+                data.forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district;
+                    option.textContent = district;
+                    selectElement.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching districts:', error));
+    }
+
+    // Function to sort requests by time remaining
+    function sortRequestsByTimeRemaining() {
+        const tbody = document.getElementById('requests-body');
+        const rows = Array.from(tbody.children);
+
+        rows.sort((rowA, rowB) => {
+            const deadlineA = new Date(rowA.querySelector('td:nth-child(9)').textContent);
+            const deadlineB = new Date(rowB.querySelector('td:nth-child(9)').textContent);
+            const currentTime = new Date();
+            const timeRemainingA = Math.abs(deadlineA - currentTime);
+            const timeRemainingB = Math.abs(deadlineB - currentTime);
+            return timeRemainingA - timeRemainingB; // Sort in ascending order of time remaining
+        });
+
+        // Clear existing rows
+        tbody.innerHTML = '';
+
+        // Append sorted rows
+        rows.forEach(row => {
+            tbody.appendChild(row);
+        });
+    }
+
+    // Function to submit a request
+    function submitRequest(requestId) {
+        const selectedDistrict = document.getElementById(`select-dist-${requestId}`).value;
+        const row = document.getElementById(requestId);
+        const age = row.querySelector('td:nth-child(3)').textContent;
+        const name = row.querySelector('td:nth-child(2)').textContent;
+        const bloodType = row.querySelector('td:nth-child(4)').textContent;
+        const quantity = row.querySelector('td:nth-child(5)').textContent;
+        const hospital = row.querySelector('td:nth-child(6)').textContent;
+        const address = row.querySelector('td:nth-child(7)').textContent;
+        const gender = row.querySelector('td:nth-child(8)').textContent;
+        const disease = row.querySelector('td:nth-child(9)').textContent;
+        const deadline = row.querySelector('td:nth-child(10)').textContent;
+        const details = row.querySelector('td:nth-child(12)').textContent;
+        const address_district = row.querySelector('td:nth-child(13)').textContent;
+
+        // Send data to Flask route using AJAX POST request
+        $.ajax({
+            type: "POST",
+            url: "/submit_request",
+            data: {
+                district: selectedDistrict,
+                form_id: requestId,
+                name: name,
+                age: age,
+                bloodType: bloodType,
+                quantity: quantity,
+                hospital: hospital,
+                gender: gender,
+                address: address,
+                disease: disease,
+                deadline: deadline,
+                details: details,
+                address_district: address_district
+            },
+            success: function(response) {
+                alert(response.message); // Show success message
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error); // Log any errors
+            }
+        });
+    }
+
+    // Function to generate rows for each request
+    function generateRequestRow(request) {
+        const { id, name, age, bloodType, quantity, hospital, address, gender, disease, deadline, details, district, address_district } = request; // Fetch new column data
+        const row = document.createElement('tr');
+        row.id = id;
+
+        const displayDistrict = address_district || '';
+
+        row.innerHTML = `
+            <td>${id}</td>
+            <td>${name}</td>
+            <td>${age}</td>
+            <td>${bloodType}</td>
+            <td>${quantity}</td>
+            <td>${hospital}</td>
+            <td>${address}</td>
+            <td>${gender}</td> <!-- Add gender field here -->
+            <td>${disease}</td>
+            <td>${deadline}</td>
+            <td><span class="timer"></span></td> <!-- Placeholder for dynamic update -->
+            <td>${details}</td>
+            <td>${displayDistrict}</td> <!-- Display address district -->
+            <td>
+                <select id="select-dist-${id}" name="select-dist-${id}" required>
+                    <option value="">Select District</option>
+                </select>
+            </td>
+            <td>
+                <button class="btn" onclick="submitRequest('${id}')">Submit</button>
+            </td>
+        `;
+
+        // Fetch districts for this row
+        fetchDistricts(id);
+
+        return row;
+    }
+
+    // Function to update data from Flask
+    function updateDataFromFlask() {
+        fetch('/update_data')
+            .then(response => response.json())
+            .then(data => {
+                // Clear existing rows
+                const tbody = document.getElementById('requests-body');
+                tbody.innerHTML = '';
+
+                // Generate rows for each request
+                data.forEach(request => {
+                    const row = generateRequestRow(request);
+                    tbody.appendChild(row);
+                });
+
+                // Start the timer
+                updateTimeRemaining();
+                sortRequestsByTimeRemaining(); // Initial sorting
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+
+    // Call updateDataFromFlask() to fetch and update data on page load
+    updateDataFromFlask();
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>

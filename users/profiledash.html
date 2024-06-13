@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <style>
+    /* General styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: rgb(234, 179, 179);
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #8c1c1c;
+    }
+
+    .profile-info {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #8c1c1c;
+      color: #fff;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+    }
+
+    .btn:hover {
+      background-color: #6c1515;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>User Profile</h1>
+    <div class="profile-info">
+      <label for="fname">First Name:</label>
+      <p id="fname">{{ user.first_name }}</p>
+
+      <label for="lname">Last Name:</label>
+      <p id="lname">{{ user.last_name }}</p>
+
+      <label for="dob">Date of Birth:</label>
+      <p id="dob">{{ user.dob }}</p>
+
+      <label for="phone">Phone Number:</label>
+      <p id="phone">{{ user.phone }}</p>
+
+      <label for="age">Age:</label>
+      <p id="age">{{ user.age }}</p>
+
+      <label for="district">District:</label>
+      <p id="district">{{ user.district }}</p>
+
+      <label for="address">Address:</label>
+      <p id="address">{{ user.address }}</p>
+
+      <label for="gender">Gender:</label>
+      <p id="gender">{{ user.gender }}</p>
+      
+      <!-- Add update details button -->
+    </div>
+  </div>
+</body>
+</html>

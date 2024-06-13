@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        img {
+            width: 100px;
+            height: auto;
+        }
+
+        .quantity-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+        }
+
+        .btn {
+            cursor: pointer;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            margin-left: 5px;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .remove-btn {
+            background-color: #ff5555;
+        }
+
+        .remove-btn:hover {
+            background-color: #ff0000;
+        }
+
+        #submitBtn {
+            margin-top: 20px;
+            display: block;
+            width: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        #submitBtn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>View Cart</h1>
+    </header>
+    <form id="cartForm" method="POST" action="/add_to_cart.html">
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="cartItemsList">
+        </tbody>
+    </table>
+    <input type="hidden" id="item_count" name="item_count" value="">
+
+    <button id="submitBtn" onclick="redirectToCheckout()">Add to Cart</button>
+    <script>
+        window.onload = function () {
+            const cartItemsList = document.getElementById('cartItemsList');
+            const cartItems = localStorage.getItem('cartItems');
+    
+            if (cartItems) {
+                const items = JSON.parse(cartItems);
+                items.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    const itemNameCell = document.createElement('td');
+                    const quantityCell = document.createElement('td');
+                    const imageCell = document.createElement('td');
+                    const actionCell = document.createElement('td');
+    
+                    itemNameCell.textContent = item.name;
+    
+                    // Construct quantity container
+                    const quantityContainer = document.createElement('div');
+                    quantityContainer.classList.add('quantity-container');
+    
+                    const decrementBtn = document.createElement('button');
+                    decrementBtn.textContent = '-';
+                    decrementBtn.classList.add('btn');
+                    decrementBtn.onclick = function () {
+                        decrement(item.name);
+                    };
+    
+                    const quantityInput = document.createElement('input');
+                    quantityInput.type = 'number';
+                    quantityInput.name = `quantity_${index + 1}`; // Set name dynamically
+                    quantityInput.value = item.quantity;
+                    quantityInput.min = 0;
+                    quantityInput.classList.add('quantity-input');
+    
+                    const incrementBtn = document.createElement('button');
+                    incrementBtn.textContent = '+';
+                    incrementBtn.classList.add('btn');
+                    incrementBtn.onclick = function () {
+                        increment(item.name);
+                    };
+    
+                    quantityContainer.appendChild(decrementBtn);
+                    quantityContainer.appendChild(quantityInput);
+                    quantityContainer.appendChild(incrementBtn);
+    
+                    quantityCell.appendChild(quantityContainer);
+    
+                    // Construct image cell
+                    const img = document.createElement('img');
+                    img.src = getImagePath(item.name); // Get image path based on item name
+                    img.alt = item.name;
+                    imageCell.appendChild(img);
+    
+                    // Construct action cell
+                    const removeBtn = document.createElement('button');
+                    removeBtn.textContent = 'Remove';
+                    removeBtn.classList.add('btn', 'remove-btn');
+                    removeBtn.onclick = function () {
+                        removeItem(item.name);
+                    };
+                    actionCell.appendChild(removeBtn);
+    
+                    // Append cells to row
+                    row.appendChild(imageCell);
+                    row.appendChild(itemNameCell);
+                    row.appendChild(quantityCell);
+                    row.appendChild(actionCell);
+    
+                    // Append row to cart items list
+                    cartItemsList.appendChild(row);
+                });
+    
+                // Set the value of item_count field
+                document.getElementById('item_count').value = items.length;
+            } else {
+                const emptyMessageRow = document.createElement('tr');
+                const emptyMessageCell = document.createElement('td');
+                emptyMessageCell.colSpan = 4;
+                emptyMessageCell.textContent = 'Your cart is empty';
+    
+                emptyMessageRow.appendChild(emptyMessageCell);
+                cartItemsList.appendChild(emptyMessageRow);
+    
+                // If cart is empty, set item_count to 0
+                document.getElementById('item_count').value = 0;
+            }
+        };
+    
+        function increment(itemName) {
+            const cartItems = JSON.parse(localStorage.getItem('cartItems'));
+            const updatedItems = cartItems.map(item => {
+                if (item.name === itemName) {
+                    return {
+                        ...item,
+                        quantity: item.quantity + 1
+                    };
+                }
+                return item;
+            });
+            localStorage.setItem('cartItems', JSON.stringify(updatedItems));
+            window.location.reload(); // Refresh the page to reflect changes
+        }
+    
+        function decrement(itemName) {
+            const cartItems = JSON.parse(localStorage.getItem('cartItems'));
+            const updatedItems = cartItems.map(item => {
+                if (item.name === itemName && item.quantity > 0) {
+                    return {
+                        ...item,
+                        quantity: item.quantity - 1
+                    };
+                }
+                return item;
+            });
+            localStorage.setItem('cartItems', JSON.stringify(updatedItems));
+            window.location.reload(); // Refresh the page to reflect changes
+        }
+    
+        function removeItem(itemName) {
+            const cartItems = JSON.parse(localStorage.getItem('cartItems'));
+            const updatedItems = cartItems.filter(item => item.name !== itemName);
+            localStorage.setItem('cartItems', JSON.stringify(updatedItems));
+            window.location.reload(); // Refresh the page to reflect changes
+        }
+    
+        function getImagePath(itemName) {
+            switch (itemName) {
+                case 'Needles':
+                    return 'https://i.ibb.co/7Q82BXD/syringe.jpg';
+                case 'Plasma Expressor':
+                    return 'https://i.ibb.co/SXWDDNs/plasmaexpressor.jpg';
+                case 'Platelet Incubators':
+                    return 'https://i.ibb.co/KmyC02F/plateletincubators.jpg';
+                case 'Blood Bag':
+                    return 'https://i.ibb.co/LkMGhkK/bloodbag.jpg';
+                case 'Refrigerator':
+                    return 'https://i.ibb.co/Qnp6W0V/refrigirator.jpg';
+                case 'Centrifuge':
+                    return 'https://i.ibb.co/CH7MfJp/centrifuge.jpg';
+                case 'Microscope':
+                    return 'https://i.ibb.co/ctSx29S/microscope.jpg';
+                case 'Cooling or Warming Pads':
+                    return 'https://i.ibb.co/BP7t7Kp/icepack.jpg';
+                case 'Beds':
+                    return 'https://i.ibb.co/p3RJJZy/Bed.jpg';
+                case 'Bandages':
+                    return 'https://i.ibb.co/T0PzRsq/Bandages.jpg';
+                case 'Blood Pressure Monitors':
+                    return 'https://i.ibb.co/vcxYC1X/Blood-Pressure.jpg';
+                case 'Alcohol Swabs':
+                    return 'https://i.ibb.co/ZcRtb8j/Alcohol-Swabs.jpg';
+                case 'Tourniquets':
+                    return 'https://i.ibb.co/YR0RWGh/Tourniquet.jpg';
+                default:
+                    return '';
+            }
+        }
+    
+    
+    </script>
+</body>
+
+</html>

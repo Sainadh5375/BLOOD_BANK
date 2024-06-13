@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #156729;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-position: center;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+        
+        .main {
+            width: 70%;
+            margin: 50px auto;
+            background-color: rgba(255, 255, 255, 0.8); /* To make the form background semi-transparent */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.5s ease;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #007bff;
+            transition: color 0.5s ease;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.5s ease;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1>Appointment History</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Appointment ID</th>
+                    <th>Appointment date</th>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Blood Group</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data %}
+                <tr>
+                    <td>{{ item['appointment_id'] }}</td>
+                    <td>{{ item['appointment_date'] }}</td>
+                    <td>{{ item['name'] }}</td>
+                    <td>{{ item['gender'] }}</td>
+                    <td>{{ item['blood_group'] }}</td>
+                    <td>{{ item['status'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            
+        </table>
+    </div>
+</body>
+</html>
