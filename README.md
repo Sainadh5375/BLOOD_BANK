@@ -22,21 +22,22 @@ Installation
 ------------
 1. Clone the repository:
    git clone https://github.com/Sainadh5375/BLOOD_BANK.git
+   
    cd BLOOD_BANK
 
-2. Create a virtual environment:
+3. Create a virtual environment:
    python -m venv env
    source env/bin/activate  # On Windows use `env\Scripts\activate`
 
-3. Install dependencies:
+4. Install dependencies:
    pip install -r requirements.txt
 
-4. Set up the database:
+5. Set up the database:
    flask db init
    flask db migrate -m "Initial migration."
    flask db upgrade
 
-5. Run the Flask application:
+6. Run the Flask application:
    flask run
 
 Usage
